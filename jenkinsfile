@@ -1,0 +1,44 @@
+pipeline {
+  agent any
+
+  stages {
+    stage('Checkout') {
+      steps {
+        checkout scm
+      }
+    }
+
+    stage('Terraform Init') {
+      steps {
+        sh 'terraform init'
+      }
+    }
+
+    stage('Terraform Validate') {
+      steps {
+        sh 'terraform validate'
+      }
+    }
+
+    stage('Terraform Plan') {
+      steps {
+        sh 'terraform plan'
+      }
+    }
+
+    stage('Terraform Apply') {
+      steps {
+        input message: 'Do you want to apply the changes?'
+        sh 'terraform apply -auto-approve'
+      }
+    }
+
+    stage('Terraform Destroy') {
+      steps {
+        input message: 'Are you sure you want to destroy the infrastructure?'
+        sh 'terraform destroy -auto-approve'
+      }
+    }
+  }
+}
+
